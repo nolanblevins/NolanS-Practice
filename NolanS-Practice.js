@@ -1,23 +1,30 @@
+items = new meteor.collection("items")
+
 if (Meteor.isClient) {
-  // counter starts at 0
-  Session.setDefault('counter', 0);
-
-  Template.hello.helpers({
-    counter: function () {
-      return Session.get('counter');
+  Template.list.helpers({
+    items: function() {
+      return items.find();
+    },
+doneClass:function() {
+  if(this.done)
+    return"done";
+  else
+    return"";
     }
   });
 
-  Template.hello.events({
-    'click button': function () {
-      // increment the counter when button is clicked
-      Session.set('counter', Session.get('counter') + 1);
-    }
-  });
-}
+  Template.controls.events({
+  'submit form': function(event) {
+event.preventDefault();
 
-if (Meteor.isServer) {
-  Meteor.startup(function () {
-    // code to run on server at startup
+var description = $(event.target).find('[id=newItems').val()
+Items.insert({description:description});
+   }
   });
+
+Template.lists.events({
+  'click li' : function() {
+items.update({_id:this._id},{$set:{done:!this.done}});
+  }
+ });
 }

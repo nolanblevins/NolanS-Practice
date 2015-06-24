@@ -1,30 +1,23 @@
-items = new meteor.collection("items")
-
 if (Meteor.isClient) {
-  Template.list.helpers({
-    items: function() {
-      return items.find();
-    },
-doneClass:function() {
-  if(this.done)
-    return"done";
-  else
-    return"";
+  // counter starts at 0
+  Session.setDefault('counter', 0);
+
+  Template.hello.helpers({
+    counter: function () {
+      return Session.get('counter');
     }
   });
 
-  Template.controls.events({
-  'submit form': function(event) {
-event.preventDefault();
-
-var description = $(event.target).find('[id=newItems').val()
-Items.insert({description:description});
-   }
+  Template.hello.events({
+    'click button': function () {
+      // increment the counter when button is clicked
+      Session.set('counter', Session.get('counter') + 1);
+    }
   });
+}
 
-Template.lists.events({
-  'click li' : function() {
-items.update({_id:this._id},{$set:{done:!this.done}});
-  }
- });
+if (Meteor.isServer) {
+  Meteor.startup(function () {
+    // code to run on server at startup
+  });
 }
